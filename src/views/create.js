@@ -12,10 +12,10 @@ const createTempl = (data, onSave) => html`
                         <table class="table">
                             <thead>
                                 <tr>
-                                    <th>Ел.№</th>
                                     <th>Потребител</th>
                                     <th>Тел.№</th>
                                     <th>Бележка</th>
+                                    <th>Ел.№</th>
                                     <th>Старо</th>
                                     <th>Ново</th>
                                 </tr>
@@ -35,19 +35,19 @@ const createTempl = (data, onSave) => html`
 const card = (item) => html`
 <tr>
     <td>
-        <input class="elN" .value=${item.elN}/>
+        <input class="name" .value=${item.name} disabled/>
     </td>
     <td>
-        <input class="name" .value=${item.name}/>
+        <input class="phone" .value=${item.phone} disabled/> 
     </td>
     <td>
-        <input class="phone" .value=${item.phone}/> 
+        <input class="note" .value=${item.note} disabled/> 
     </td>
     <td>
-        <input class="note" .value=${item.note}/> 
+        <input class="elN" .value=${item.elN} disabled/>
     </td>
     <td>
-        <input class="old" .value=${item.paid ? item.new : item.old}/>
+        <input class="old" .value=${item.paid ? item.new : item.old} disabled/>
     </td>
     <td>
         <input class="new" .value=${item.new}/>
