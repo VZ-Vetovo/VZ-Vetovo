@@ -23,6 +23,17 @@ const allTempl = (data) => html`
                             <tbody>
                                 ${Object.values(data.units).map(card)}
                             </tbody>
+                            <tfoot>
+                                <tr><th></th></tr>
+                                <tr>
+                                    <th></th>
+                                    <th class="paid">Платено</th>
+                                    <th></th>
+                                    <th></th>
+                                    <th class="unpaid">Неплатено</th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>

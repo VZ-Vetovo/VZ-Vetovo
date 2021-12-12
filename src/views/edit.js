@@ -1,7 +1,8 @@
 import { getAll, loader, updateThis, _price, _tax } from "../apiData/data.js";
 import { html, render } from "../lib.js";
+import { download, toCsv } from "./download.js";
 
-const editTempl = (data, onSave, onNew, kilowats, momentSum, totalSum) => html`
+const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum) => html`
 <div id="container">
     <div id="exercise">
         <h1>Отчетен период: ${data.createdAt.split('T')[0]}</h1>
@@ -44,6 +45,7 @@ const editTempl = (data, onSave, onNew, kilowats, momentSum, totalSum) => html`
                         </table>
                         <button @click=${onSave}>Запази Промените</button>
                         <button @click=${onNew}>Добави нов абонат</button>
+                        <button @click=${onExport}>Свали Данни</button>
                     </div>
                 </div>
             </div>
@@ -102,7 +104,7 @@ export async function editPage(ctx) {
         kilowats += Number(v.new) - Number(v.old);
     })
 
-    ctx.render(editTempl(data, onSave, onNew, kilowats, momentSum, totalSum));
+    ctx.render(editTempl(data, onSave, onNew, onExport, kilowats, momentSum, totalSum));
 
     async function onSave() {
         const rows = document.querySelectorAll('tbody tr');
@@ -128,5 +130,11 @@ export async function editPage(ctx) {
         const tabl = document.querySelector('tbody');
         const newRow = card({});
         render(newRow, tabl);
+    }
+
+    function onExport() {
+        const table = document.querySelector('table');
+        const csv = toCsv(table);
+        download(csv, 'download.csv');
     }
 }
