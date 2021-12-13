@@ -2,7 +2,7 @@ import { html } from '../lib.js';
 import * as api from './api.js';
 
 export const _price = 0.25;
-export const _tax = 5;
+export const _tax = 10;
 export const loader = () => html`<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
 
 export const login = api.login;
