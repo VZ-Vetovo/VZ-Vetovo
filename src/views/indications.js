@@ -1,10 +1,10 @@
-import { getAll, _tax, _price, loader } from "../apiData/data.js";
+import { getLastIndication, _tax, _price, loader } from "../apiData/data.js";
 import { html } from "../lib.js";
 
 const allTempl = (data) => html`
 <div id="container">
     <div id="exercise">
-        <h1>Отчетен период: ${data.createdAt.split('T')[0]}</h1>
+        <h1>Отчетени показания до: ${data.createdAt.split('T')[0]}</h1>
         <div class="wrapper">
             <div class="card-wrapper">
                 <div class="row">
@@ -24,7 +24,10 @@ const allTempl = (data) => html`
                                 ${Object.values(data.units).map(card)}
                             </tbody>
                             <tfoot>
-                                <tr><th></th></tr>
+                                <tr>
+                                    <th></th>
+                                    <th colspan="4">За информация Н.Георгиева: 0885805644</th>
+                                </tr>
                                 <tr>
                                     <th></th>
                                     <th class="paid">Платено</th>
@@ -66,7 +69,7 @@ const card = (item) => html`
 
 export async function unitsPage(ctx) {
     ctx.render(loader());
-    const items = await getAll();
+    const items = await getLastIndication();
     const data = items.results[0];
 
     ctx.render(allTempl(data));

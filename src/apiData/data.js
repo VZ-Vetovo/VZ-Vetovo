@@ -9,7 +9,7 @@ export const login = api.login;
 export const register = api.register;
 export const logout = api.logout;
 
-export async function getAll(){
+export async function getLastIndication(){
     return api.get('/classes/indication?order=-createdAt&limit=1');    
 }
 
@@ -21,11 +21,11 @@ export async function newPost(data) {
     return api.post('/classes/posts', data);
 }
 
-export async function createNew(data) {
+export async function saveNewIndication(data) {
     return api.post('/classes/indication', data);
 }
 
-export async function updateThis(data, id) {
+export async function updateThisIndication(data, id) {
     return api.put('/classes/indication/' + id, data);
 }
 

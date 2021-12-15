@@ -5,18 +5,16 @@ const host = 'https://parseapi.back4app.com';
 async function request(url, options) {
     try {
         const response = await fetch(host + url, options);
-        if (response.ok != true) {
-            if (response.status == 403) {
-                clearUserData();
-            }
+        if (response.ok == false) {
             const error = await response.json();
-            throw new Error(error.message)
+            throw new Error(error.error)
         }
-        try {
-            return await response.json();
-        } catch(err) {
-            return response;
-        }
+        return response.json();
+        // try {
+        //     return await response.json();
+        // } catch(err) {
+        //     return response;
+        // }
         // if (response.status == 204) {
         //     return response;
         // } else {
@@ -33,9 +31,7 @@ function createOptions(method = 'get', data) {
         method,
         headers: {
             'X-Parse-Application-Id': 'e29amB1TcYqKYQlJDSvtbpHTFnMMdRQiSzEMVDn3',
-            'X-Parse-REST-API-Key': '6rzQoexbCEallVe1wHp0cUXSpNXBSWQgU1LOSq9y',
-            'X-Parse-Revocable-Session': '1',
-            'Content-Type': 'application/json'
+            'X-Parse-REST-API-Key': '6rzQoexbCEallVe1wHp0cUXSpNXBSWQgU1LOSq9y'
         }
     }
     if (data != undefined) {
@@ -66,10 +62,10 @@ export async function del(url) {
 }
 
 export async function login(username, password) {
-    const result = await get(`/login?username=${username}&password=${password}`);
+    const result = await post(`/login`, {username, password});
     const userData = {
         username: result.username,
-        id: result._id,
+        id: result.objectId,
         token: result.sessionToken
     }
     setUserData(userData);
@@ -79,13 +75,13 @@ export async function register(username, password) {
     const result = await post('/users', {username, password});
     const userData = {
         username: result.username,
-        id: result._id,
+        id: result.objectId,
         token: result.sessionToken
     }
     setUserData(userData);
 }
 
 export async function logout() {
-    // get('/users/logout');
+    post('/logout');
     clearUserData();
 }

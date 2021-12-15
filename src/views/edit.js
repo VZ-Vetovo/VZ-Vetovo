@@ -1,4 +1,4 @@
-import { getAll, loader, updateThis, _price, _tax } from "../apiData/data.js";
+import { getLastIndication, loader, updateThisIndication, _price, _tax } from "../apiData/data.js";
 import { html, render } from "../lib.js";
 import { download, toCsv } from "./download.js";
 
@@ -90,7 +90,7 @@ const card = (item) => html`
 
 export async function editPage(ctx) {
     ctx.render(loader());
-    const items = await getAll();
+    const items = await getLastIndication();
     const data = items.results[0];
 
     let kilowats = 0;
@@ -122,7 +122,7 @@ export async function editPage(ctx) {
             })
         })
         ctx.render(loader());
-        await updateThis(newdata, data.objectId);
+        await updateThisIndication(newdata, data.objectId);
         ctx.page.redirect(`/indications`);
     }
 

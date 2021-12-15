@@ -1,4 +1,4 @@
-import { createNew, getAll, loader } from "../apiData/data.js";
+import { saveNewIndication, getLastIndication, loader } from "../apiData/data.js";
 import { html } from "../lib.js";
 
 const createTempl = (data, onSave) => html`
@@ -54,9 +54,9 @@ const card = (item) => html`
     </td>
 </tr>`;
 
-export async function createPage(ctx) {
+export async function reportingPage(ctx) {
     ctx.render(loader());
-    const items = await getAll();
+    const items = await getLastIndication();
     const data = items.results[0];
 
     ctx.render(createTempl(data, onSave));
@@ -77,7 +77,7 @@ export async function createPage(ctx) {
             });
         });
         ctx.render(loader());
-        await createNew(newdata);
+        await saveNewIndication(newdata);
         ctx.page.redirect('/indications');
     }
 }

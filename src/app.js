@@ -1,11 +1,10 @@
 import { getUserData, logout } from "./apiData/data.js";
 import { page, render } from "./lib.js";
-import { unitsPage } from "./views/all.js";
+import { unitsPage } from "./views/indications.js";
 import { homePage } from "./views/home.js";
 import { postsPage } from "./views/posts.js";
-import { createPage } from "./views/create.js";
+import { reportingPage } from "./views/reporting.js";
 import { loginPage } from "./views/login.js";
-// import { registerPage } from "./views/register.js";
 import { editPage } from "./views/edit.js";
 
 const root = document.querySelector('main');
@@ -15,10 +14,9 @@ document.querySelector('#logoutBtn').addEventListener('click', onLogout);
 page(decorateContext);
 page('/', homePage);
 page('/login', loginPage);
-// page('/register', registerPage);
 page('/indications', unitsPage);
 page('/forum', postsPage);
-page('/create', createPage);
+page('/reporting', reportingPage);
 page('/edit', editPage);
 
 
