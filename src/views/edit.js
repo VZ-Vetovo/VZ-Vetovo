@@ -97,11 +97,12 @@ export async function editPage(ctx) {
     let momentSum = 0;
     let totalSum = 0;
     Object.values(data.units).forEach(v => {
+        const difference = Number(v.new) - Number(v.old);
         if(v.paid) {
-            momentSum += ((Number(v.new) - Number(v.old)) * _price + _tax)
+            momentSum += difference * _price + _tax;
         }
-        totalSum += ((Number(v.new) - Number(v.old)) * _price + _tax);
-        kilowats += Number(v.new) - Number(v.old);
+        totalSum += difference * _price + _tax;
+        kilowats += difference;
     })
 
     ctx.render(editTempl(data, onSave, onNew, onExport, kilowats, momentSum, totalSum));
