@@ -47,7 +47,7 @@ const card = (item) => html`
         <input class="elN" .value=${item.elN} disabled/>
     </td>
     <td>
-        <input class="old" .value=${item.paid ? item.new : item.old} disabled/>
+        <input class="old" .value=${item.new} disabled/>
     </td>
     <td>
         <input class="new" .value=${item.new}/>

@@ -46,6 +46,9 @@ const allTempl = (data) => html`
 </div>`;
 
 const card = (item) => html`
+    ${item.elN == '99'
+        ? null
+        : html`
 <tr class=${item.paid ? "paid" : "unpaid"}>
     <td>
         <p>${item.elN}</p>
@@ -65,7 +68,7 @@ const card = (item) => html`
     <td>
         <p>${((Number(item.new) - Number(item.old)) * _price + _tax).toFixed(2)}</p>
     </td>
-</tr>`;
+</tr>`}`;
 
 export async function unitsPage(ctx) {
     ctx.render(loader());
