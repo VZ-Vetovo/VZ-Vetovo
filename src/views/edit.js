@@ -78,7 +78,9 @@ const card = (item) => html`
         ${Number(item.new) - Number(item.old)}
     </td>
     <td>
-        ${((Number(item.new) - Number(item.old)) * _price + _tax).toFixed(2)}
+        ${item.elN == '99'
+            ? ((Number(item.new) - Number(item.old)) * _price).toFixed(2)
+            : ((Number(item.new) - Number(item.old)) * _price + _tax).toFixed(2)}
     </td>
     <td>
         ${item.paid
@@ -97,12 +99,14 @@ export async function editPage(ctx) {
     let momentSum = 0;
     let totalSum = 0;
     Object.values(data.units).forEach(v => {
-        const difference = Number(v.new) - Number(v.old);
-        if(v.paid) {
-            momentSum += difference * _price + _tax;
+        if (v.elN != '99') {
+            const difference = Number(v.new) - Number(v.old);
+            if(v.paid) {
+                momentSum += difference * _price + _tax;
+            }
+            totalSum += difference * _price + _tax;
+            kilowats += difference;
         }
-        totalSum += difference * _price + _tax;
-        kilowats += difference;
     })
 
     ctx.render(editTempl(data, onSave, onNew, onExport, kilowats, momentSum, totalSum));
