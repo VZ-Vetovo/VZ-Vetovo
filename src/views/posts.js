@@ -25,7 +25,7 @@ const postTempl = (posts, onPub) => html`
 const card = (item) => html`
 <div class="card-wrapper">
     <p>${item.content}</p>
-    <p>Публикувано на: ${item.createdAt.split('T')[0]} от: ${item.author}</p>
+    <p>Публикувано на: ${item.createdAt.split('T')[0]} -- от: ${item.author}</p>
 </div>`;
 
 export async function postsPage(ctx) {
