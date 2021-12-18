@@ -1,8 +1,6 @@
 import { html } from '../lib.js';
 import * as api from './api.js';
 
-export const _price = 0.25;
-export const _tax = 10;
 export const loader = () => html`<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`;
 
 export const login = api.login;
@@ -27,6 +25,10 @@ export async function saveNewIndication(data) {
 
 export async function updateThisIndication(data, id) {
     return api.put('/classes/indication/' + id, data);
+}
+
+export async function getTaxes(){
+    return api.get(`/classes/taxes`);    
 }
 
 export function getUserData() {

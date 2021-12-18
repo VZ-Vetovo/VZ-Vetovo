@@ -1,8 +1,8 @@
-import { getLastIndication, loader, updateThisIndication, _price, _tax } from "../apiData/data.js";
+import { getLastIndication, getTaxes, loader, updateThisIndication} from "../apiData/data.js";
 import { html, render } from "../lib.js";
 import { download, toCsv } from "./download.js";
 
-const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum) => html`
+const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum, tax, price) => html`
 <div id="container">
     <div id="exercise">
         <h1>Отчетен период: ${data.createdAt.split('T')[0]}</h1>
@@ -27,7 +27,7 @@ const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum)
                             </thead>
                             <tbody>
                                 
-                                ${Object.values(data.units).map(card)}
+                                ${Object.values(data.units).map(u => card(u, tax, price))}
                                 <div></div>
                             </tbody>
                             <tfoot>
@@ -54,7 +54,7 @@ const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum)
     </div>
 </div>`;
 
-const card = (item) => html`
+const card = (item, tax, price) => html`
 <tr class=${item.paid ? "paid" : "unpaid"}>
     <td>
         <input class="elN" .value=${item.elN}/>
@@ -79,8 +79,8 @@ const card = (item) => html`
     </td>
     <td>
         ${item.elN == '99'
-            ? ((Number(item.new) - Number(item.old)) * _price).toFixed(2)
-            : ((Number(item.new) - Number(item.old)) * _price + _tax).toFixed(2)}
+            ? ((Number(item.new) - Number(item.old)) * price).toFixed(2)
+            : ((Number(item.new) - Number(item.old)) * price + tax).toFixed(2)}
     </td>
     <td>
         ${item.paid
@@ -92,8 +92,14 @@ const card = (item) => html`
 
 export async function editPage(ctx) {
     ctx.render(loader());
-    const items = await getLastIndication();
+
+    const [items, taxes] = await Promise.all([
+        getLastIndication(),
+        getTaxes()
+    ]); 
     const data = items.results[0];
+    const tax = taxes.results[0].tax;
+    const price = taxes.results[0].kWprice;
 
     let kilowats = 0;
     let momentSum = 0;
@@ -102,14 +108,14 @@ export async function editPage(ctx) {
         if (v.elN != '99') {
             const difference = Number(v.new) - Number(v.old);
             if(v.paid) {
-                momentSum += difference * _price + _tax;
+                momentSum += difference * price + tax;
             }
-            totalSum += difference * _price + _tax;
+            totalSum += difference * price + tax;
             kilowats += difference;
         }
     })
 
-    ctx.render(editTempl(data, onSave, onNew, onExport, kilowats, momentSum, totalSum));
+    ctx.render(editTempl(data, onSave, onNew, onExport, kilowats, momentSum, totalSum, tax, price));
 
     async function onSave() {
         const rows = document.querySelectorAll('tbody tr');

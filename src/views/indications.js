@@ -1,7 +1,7 @@
-import { getLastIndication, _tax, _price, loader } from "../apiData/data.js";
+import { getLastIndication, loader, getTaxes } from "../apiData/data.js";
 import { html } from "../lib.js";
 
-const allTempl = (data) => html`
+const allTempl = (data, tax, price) => html`
 <div id="container">
     <div id="exercise">
         <h1>Отчетени показания до: ${data.createdAt.split('T')[0]}</h1>
@@ -21,7 +21,7 @@ const allTempl = (data) => html`
                                 </tr>
                             </thead>
                             <tbody>
-                                ${Object.values(data.units).map(card)}
+                                ${Object.values(data.units).map(u => card(u, tax, price))}
                             </tbody>
                             <tfoot>
                                 <tr>
@@ -45,7 +45,7 @@ const allTempl = (data) => html`
     </div>
 </div>`;
 
-const card = (item) => html`
+const card = (item, tax, price) => html`
     ${item.elN == '99'
         ? null
         : html`
@@ -66,14 +66,19 @@ const card = (item) => html`
         <p>${Number(item.new) - Number(item.old)}</p>
     </td>
     <td>
-        <p>${((Number(item.new) - Number(item.old)) * _price + _tax).toFixed(2)}</p>
+        <p>${((Number(item.new) - Number(item.old)) * price + tax).toFixed(2)}</p>
     </td>
 </tr>`}`;
 
 export async function unitsPage(ctx) {
     ctx.render(loader());
-    const items = await getLastIndication();
+    const [items, taxes] = await Promise.all([
+        getLastIndication(),
+        getTaxes()
+    ]); 
     const data = items.results[0];
+    const tax = taxes.results[0].tax;
+    const price = taxes.results[0].kWprice;
 
-    ctx.render(allTempl(data));
+    ctx.render(allTempl(data, tax, price));
 }
