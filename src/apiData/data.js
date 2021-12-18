@@ -28,7 +28,11 @@ export async function updateThisIndication(data, id) {
 }
 
 export async function getTaxes(){
-    return api.get(`/classes/taxes`);    
+    return api.get(`/classes/taxes`);
+}
+
+export async function updateTaxes(data, id) {
+    return api.put('/classes/taxes/' + id, data);
 }
 
 export function getUserData() {
