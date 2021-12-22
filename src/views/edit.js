@@ -5,7 +5,7 @@ import { download, toCsv } from "./download.js";
 const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum, tax, price) => html`
 <div id="container">
     <div id="exercise">
-        <h1>Отчетен период: ${data.createdAt.split('T')[0]}</h1>
+        <h1>Корекции за: ${data.createdAt.split('T')[0]}</h1>
 
         <div class="wrapper">
             <div class="card-wrapper">

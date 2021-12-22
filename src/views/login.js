@@ -38,6 +38,6 @@ export function loginPage(ctx) {
 
         await login(username, password);
         ctx.updateNav();
-        ctx.page.redirect('/indications');
+        ctx.page.redirect('/edit');
     }
 }
