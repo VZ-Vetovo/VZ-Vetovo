@@ -1,5 +1,5 @@
 import { getAllIndications, loader } from "../apiData/data.js";
-import { html, render } from "../lib.js";
+import { html } from "../lib.js";
 
 const choiseTempl = (ind, show) => html`
 <div id="container">
@@ -59,8 +59,6 @@ export async function archivePage(ctx) {
 
     const data = await getAllIndications();
     const ind = data.results;
-    
-    console.log(ind);
 
     ctx.render(choiseTempl(ind, show));
     
