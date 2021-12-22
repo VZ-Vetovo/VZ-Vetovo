@@ -7,6 +7,7 @@ import { reportingPage } from "./views/reporting.js";
 import { loginPage } from "./views/login.js";
 import { editPage } from "./views/edit.js";
 import { taxPage } from "./views/taxes.js";
+import { archivePage } from "./views/archive.js";
 
 const root = document.querySelector('main');
 const navBtns = document.querySelectorAll('nav div a')
@@ -20,6 +21,7 @@ page('/forum', postsPage);
 page('/reporting', reportingPage);
 page('/edit', editPage);
 page('/taxes', taxPage);
+page('/archive', archivePage);
 
 
 updateNav();

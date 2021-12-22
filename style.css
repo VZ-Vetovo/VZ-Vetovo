@@ -244,6 +244,22 @@ span{
   text-align: center;
 }
 
+select {
+  display: inline-block;
+  position: relative;
+  text-align: left;
+  font-size: 1.2rem;
+}
+
+.arch {
+  display: inline-block;
+  position: relative;
+  text-align: right;
+  padding: 0px 0px;
+  font-size: 1.2rem;
+}
+
+
 .lds-spinner {
   color: official;
   display: inline-block;

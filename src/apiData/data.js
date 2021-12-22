@@ -7,6 +7,10 @@ export const login = api.login;
 export const register = api.register;
 export const logout = api.logout;
 
+export async function getAllIndications(){
+    return api.get('/classes/indication?order=-createdAt');    
+}
+
 export async function getLastIndication(){
     return api.get('/classes/indication?order=-createdAt&limit=1');    
 }
