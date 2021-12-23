@@ -1,7 +1,7 @@
 import { getAllIndications, loader } from "../apiData/data.js";
 import { html } from "../lib.js";
 
-const choiseTempl = (ind, show) => html`
+const choiseTempl = (ind, onShow) => html`
 <div id="container">
     <div id="exercise">
         <div class="wrapper">
@@ -13,7 +13,7 @@ const choiseTempl = (ind, show) => html`
                             ? html`<select name="inter" id="inter">
                                        ${ind.map(card)}
                                    </select>
-                                   <button class="arch-btn" @click=${show}>Покажи</button>`
+                                   <button @click=${onShow}>Покажи</button>`
                             : html`<p>Няма данни!</p>`}
                     </div>
                 </div>
@@ -25,23 +25,27 @@ const choiseTempl = (ind, show) => html`
 
 const card = (d) => html`<option value=${d.objectId}>${d.createdAt.split('T')[0]}</option>`;
 
-const archTempl = (indications) => html`
-<div class="card-wrapper">
-    <div class="row">
-        <div class="col-md-12">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Ел.№</th>
-                        <th>Потребител</th>
-                        <th>Старо</th>
-                        <th>Ново</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${Object.values(indications).map(cardArch)}
-                </tbody>
-            </table>
+const archTempl = (indications, created, onClear) => html`
+<div id="exercise">
+    <div class="card-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table">
+                    <h1>Показания от: ${created.split('T')[0]}</h1>
+                    <thead>
+                        <tr>
+                            <th>Ел.№</th>
+                            <th>Потребител</th>
+                            <th>Старо</th>
+                            <th>Ново</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${Object.values(indications).map(cardArch)}
+                    </tbody>
+                </table>
+                <button @click=${onClear}>Изчисти</button>
+            </div>
         </div>
     </div>
 </div>`;
@@ -60,12 +64,16 @@ export async function archivePage(ctx) {
     const data = await getAllIndications();
     const ind = data.results;
 
-    ctx.render(choiseTempl(ind, show));
+    ctx.render(choiseTempl(ind, onShow));
     
-    function show() {
+    function onShow() {
         const indId = document.querySelector('#inter').value;
         const data = ind.find(i => i.objectId == indId);
 
-        ctx.render(archTempl(data.units));
+        ctx.render(archTempl(data.units, data.createdAt, onClear));
+    }
+
+    function onClear() {
+        ctx.render(choiseTempl(ind, onShow));
     }
 }
