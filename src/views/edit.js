@@ -2,7 +2,7 @@ import { getLastIndication, getTaxes, loader, updateThisIndication} from "../api
 import { html, render } from "../lib.js";
 import { download, toCsv } from "./download.js";
 
-const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum, tax, price) => html`
+const editTempl = (data, onSave, onNew, onExport, onDelete, kilowats, momentSum, totalSum, tax, price) => html`
 <div id="container">
     <div id="exercise">
         <h1>Корекции за: ${data.createdAt.split('T')[0]}</h1>
@@ -45,12 +45,12 @@ const editTempl = (data, onSave, onNew, onExport, kilowats, momentSum, totalSum,
                         </table>
                         <button @click=${onSave}>Запази Промените</button>
                         <button @click=${onNew}>Добави нов абонат</button>
+                        <button @click=${onDelete}>Итрий абонат № <input id='del-user'/></button>
                         <button @click=${onExport}>Свали Данни</button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </div>`;
 
@@ -115,17 +115,16 @@ export async function editPage(ctx) {
         }
     })
 
-    ctx.render(editTempl(data, onSave, onNew, onExport, kilowats, momentSum, totalSum, tax, price));
+    ctx.render(editTempl(data, onSave, onNew, onExport, onDelete, kilowats, momentSum, totalSum, tax, price));
 
     async function onSave() {
         const rows = document.querySelectorAll('tbody tr');
         const newdata = {
             units: {}
         }
-        let num = 0;
         rows.forEach(r => {
             const vals = r.querySelectorAll('input');
-            num ++;
+            const num = r.querySelector('.elN').value;
             newdata.units[num] = {}
             newdata.units[num].paid = r.querySelector('.check').checked
             vals.forEach(v => {
@@ -139,8 +138,37 @@ export async function editPage(ctx) {
 
     function onNew() {
         const tabl = document.querySelector('tbody');
-        const newRow = card({});
+        const newRow = card({
+            'paid': true,
+            'elN': '',
+            'name': '',
+            'phone': '',
+            'note': '',
+            'old': 0,
+            'new': 0,
+        }, tax, price);
         render(newRow, tabl);
+    }
+
+    async function onDelete() {
+        const delField = document.querySelector('#del-user');
+        const dellUser = delField.value;
+        if (Object.keys(data.units).includes(dellUser)) {
+            const conf = confirm(`Желаете ли да изтриете абонат № ${dellUser}`);
+            if (conf){
+                delete data.units[dellUser];
+                delete data.createdAt;
+                delete data.updatedAt;
+
+                ctx.render(loader());
+                await updateThisIndication(data, data.objectId);
+                ctx.page.redirect(`/indications`);
+            } else {
+                delField.value = '';
+            }
+        } else {
+            delField.value = '';
+        }
     }
 
     function onExport() {

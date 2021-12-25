@@ -259,6 +259,11 @@ select {
   font-size: 1.2rem;
 }
 
+#del-user {
+  width: 40px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
 
 .lds-spinner {
   color: official;
