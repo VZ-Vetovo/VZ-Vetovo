@@ -62,20 +62,26 @@ export async function reportingPage(ctx) {
     ctx.render(createTempl(data, onSave));
 
     async function onSave() {
+        let filled = true;
         const rows = document.querySelectorAll('tbody tr');
         const newdata = {
             units: {}
         }
-        let num = 0;
         rows.forEach(r => {
             const vals = r.querySelectorAll('input');
-            num ++;
+            const num = r.querySelector('.elN').value;
+            if (r.querySelector('.new').value == '') {
+                filled = false;
+            }
             newdata.units[num] = {};
             newdata.units[num].paid = false;
             vals.forEach(v => {
                 newdata.units[num][v.className] = v.value
             });
         });
+        if (!filled) {
+            return alert('Попълни всички полета!');
+        }
         ctx.render(loader());
         await saveNewIndication(newdata);
         ctx.page.redirect('/indications');
