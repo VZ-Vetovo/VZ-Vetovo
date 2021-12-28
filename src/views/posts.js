@@ -27,7 +27,7 @@ const card = (item, onDelete, admin) => html`
     <p>${item.content}</p>
     <p>Публикувано на: ${item.createdAt.split('T')[0]} -- от: ${item.author}</p>
     ${ admin != null
-        ? html`<button id=${item.objectId} @click=${onDelete}>Delete</button>`
+        ? html`<button id=${item.objectId} @click=${onDelete}>Изтрий</button>`
         : null
     }
 </div>`;
