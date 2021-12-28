@@ -23,6 +23,10 @@ export async function newPost(data) {
     return api.post('/classes/posts', data);
 }
 
+export async function delPost(id) {
+    return api.del('/classes/posts/' + id);
+}
+
 export async function saveNewIndication(data) {
     return api.post('/classes/indication', data);
 }

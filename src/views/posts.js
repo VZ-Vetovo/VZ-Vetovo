@@ -1,7 +1,7 @@
-import { getPosts, loader, newPost } from "../apiData/data.js";
+import { delPost, getPosts, getUserData, loader, newPost } from "../apiData/data.js";
 import { html } from "../lib.js";
 
-const postTempl = (posts, onPub) => html`
+const postTempl = (posts, onPub, onDelete, admin) => html`
 <div id="container">
     <div id="exercise">
         <h1>ОБЯВИ, МНЕНИЯ и КОМЕНТАРИ.</h1>
@@ -17,15 +17,19 @@ const postTempl = (posts, onPub) => html`
             </div>
             ${posts.length == 0
                 ? html`Въведете първият коментар!`
-                : posts.map(card)}
+                : posts.map(i => card(i, onDelete, admin))}
         </div>
     </div>
 </div>`;
 
-const card = (item) => html`
+const card = (item, onDelete, admin) => html`
 <div class="card-wrapper">
     <p>${item.content}</p>
     <p>Публикувано на: ${item.createdAt.split('T')[0]} -- от: ${item.author}</p>
+    ${ admin != null
+        ? html`<button id=${item.objectId} @click=${onDelete}>Delete</button>`
+        : null
+    }
 </div>`;
 
 export async function postsPage(ctx) {
@@ -33,7 +37,8 @@ export async function postsPage(ctx) {
 
     const items = await getPosts();
     const posts = items.results
-    ctx.render(postTempl(posts, onPub));
+    const admin = getUserData();
+    ctx.render(postTempl(posts, onPub, onDelete, admin));
 
     async function onPub() {
         const content = document.querySelector('#content').value.trim();
@@ -42,13 +47,16 @@ export async function postsPage(ctx) {
         if (content == '' || author == '') {
             return alert('Попълни полетата, преди публикация!')
         }
-
         const data = { content, author};
 
+        ctx.render(loader());
         await newPost(data);
-        document.querySelector('#content').value = '';
-        document.querySelector('#author').value = '';
+        ctx.page.redirect(`/forum`);
+    }
 
+    async function onDelete(e) {
+        ctx.render(loader());
+        await delPost(e.target.id);
         ctx.page.redirect(`/forum`);
     }
 }
