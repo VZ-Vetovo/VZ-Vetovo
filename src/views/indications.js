@@ -25,6 +25,9 @@ const allTempl = (data, tax, price) => html`
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th colspan="6">* Сумите са формирани от такса - ${tax.toFixed(2)}лв + цена за кВт - ${price}лв.</th>
+                                </tr>
+                                <tr>
                                     <th></th>
                                     <th colspan="4">За информация Н.Георгиева: 0885805644</th>
                                 </tr>
