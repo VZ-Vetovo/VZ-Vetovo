@@ -23,7 +23,6 @@ page('/edit', editPage);
 page('/taxes', taxPage);
 page('/archive', archivePage);
 
-
 updateNav();
 page.start();
 
